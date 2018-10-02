@@ -1,0 +1,130 @@
+//
+//  main.c
+//  battleship beta
+//
+//  Created by Haan Zilmer on 8/25/18.
+//  Copyright © 2018 Haan Zilmer. All rights reserved.
+//
+
+#include <stdio.h>
+void printOcean(int);
+void placeShip(char*);
+int check4Win(int);
+
+struct dimensions {
+    int row, column; //dimensions for the Ocean
+    char OceanA[11][11], OceanB[11][11]; //2d array for Ocean
+    int player, AI; //keeping track of which players turn
+}a;
+
+
+int main() {
+    int end = 0; //end game counter
+    char start; //define start game character
+    a.player = 1; //initilaize player to 1
+
+
+
+    // fill ocean on left and top border
+    a.OceanA[0][0] = ' ';
+    a.OceanA[1][0] = '0';
+    a.OceanA[2][0] = '1';
+    a.OceanA[3][0] = '2';
+    a.OceanA[4][0] = '3';
+    a.OceanA[5][0] = '4';
+    a.OceanA[6][0] = '5';
+    a.OceanA[7][0] = '6';
+    a.OceanA[8][0] = '7';
+    a.OceanA[9][0] = '8';
+    a.OceanA[10][0] = '9';
+    a.OceanA[0][1] = 'a';
+    a.OceanA[0][2] = 'b';
+    a.OceanA[0][3] = 'c';
+    a.OceanA[0][4] = 'd';
+    a.OceanA[0][5] = 'e';
+    a.OceanA[0][6] = 'h';
+    a.OceanA[0][7] = 'i';
+    a.OceanA[0][8] = 'j';
+    a.OceanA[0][9] = 'k';
+    a.OceanA[0][10] = 'l';
+
+    a.OceanB[0][0] = ' ';
+    a.OceanB[1][0] = '0';
+    a.OceanB[2][0] = '1';
+    a.OceanB[3][0] = '2';
+    a.OceanB[4][0] = '3';
+    a.OceanB[5][0] = '4';
+    a.OceanB[6][0] = '5';
+    a.OceanB[7][0] = '6';
+    a.OceanB[8][0] = '7';
+    a.OceanB[9][0] = '8';
+    a.OceanB[10][0] = '9';
+    a.OceanB[0][1] = 'a';
+    a.OceanB[0][2] = 'b';
+    a.OceanB[0][3] = 'c';
+    a.OceanB[0][4] = 'd';
+    a.OceanB[0][5] = 'e';
+    a.OceanB[0][6] = 'h';
+    a.OceanB[0][7] = 'i';
+    a.OceanB[0][8] = 'j';
+    a.OceanB[0][9] = 'k';
+    a.OceanB[0][10] = 'l';
+
+
+
+
+    for(int k = 1; k < 11; k++) {
+        for(int i = 1; i < 11; i++) {
+            a.OceanA[k][i] = ' '; //fill Ocean
+        }
+    }
+    for(int k = 1; k < 11; k++) {
+        for(int i = 1; i < 11; i++) {
+            a.OceanB[k][i] = ' '; //fill Ocean
+        }
+    }
+    printf("Welcome to the game Battleship, would you like to play(y or n)? :");
+    scanf("%c", &start); //initialize start
+    if( start == 'y') {
+        printOcean(1);
+//        while(end != 1) { // loops through game until the end counter equals 1
+//            placePiece(slot);
+//            printOcean();
+//            end = check4Win(end);
+//        }
+        printf("Aw it looks likes player %d wins and player %d sucks!\n\n", a.AI, a.player);
+    } else if ( start == 'n') {
+        printf("Aww do you not enjoy the intellectually stimulating game of Battleship?\n\n");
+    }
+
+
+}
+
+void printOcean(int type) {
+    if( type == 1) {
+        printf( "\n--------------------------------------------\n"); // formatiing for the Ocean
+        for(int i = 0; i < 11; i++) {
+            for(int j = 0; j < 11; j++) {
+                printf(" %c |", a.OceanA[i][j]); // prints Ocean
+            }
+            printf( "\n--------------------------------------------\n"); // formatiing for the Ocean
+        }
+    } else if( type == 2) {
+        printf( "\n--------------------------------------------\n"); // formatiing for the Ocean
+        for(int i = 0; i < 11; i++) {
+            for(int j = 0; j < 11; j++) {
+                printf(" %c |", a.OceanB[i][j]); // prints Ocean
+            }
+            printf( "\n--------------------------------------------\n"); // formatiing for the Ocean
+        }
+    }
+}
+
+void placeShip(char *slotPtr) {
+
+}
+
+int check4Win(int end) {
+
+    return end;
+}
