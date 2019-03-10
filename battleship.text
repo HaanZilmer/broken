@@ -1,6 +1,6 @@
 //
 //  main.c
-//  battleship beta
+//  battleship Charlie
 //
 //  Created by Haan Zilmer on 8/25/18.
 //  Copyright © 2018 Haan Zilmer. All rights reserved.
@@ -8,8 +8,9 @@
 
 #include <stdio.h>
 void printOcean(int);
-void placeShip(char*);
+void placeShip(void);
 int check4Win(int);
+void buildOcean(void);
 
 struct dimensions {
     int row, column; //dimensions for the Ocean
@@ -22,9 +23,27 @@ int main() {
     int end = 0; //end game counter
     char start; //define start game character
     a.player = 1; //initilaize player to 1
+    
+    buildOcean();
+    printf("Welcome to the game Battleship, would you like to play(y or n)? :");
+    scanf("%c", &start); //initialize start
+    if( start == 'y') {
+        printOcean(1);
+        while(end != 1) { // loops through game until the end counter equals 1
+            placeShip();
+            printOcean(1);
+            end = check4Win(end);
+            
+        }
+        printf("Aw it looks likes player %d wins and player %d sucks!\n\n", a.AI, a.player);
+    } else if ( start == 'n') {
+        printf("Aww do you not enjoy the intellectually stimulating game of Battleship?\n\n");
+    }
+    
+    
+}
 
-
-
+void buildOcean() {
     // fill ocean on left and top border
     a.OceanA[0][0] = ' ';
     a.OceanA[1][0] = '0';
@@ -47,7 +66,7 @@ int main() {
     a.OceanA[0][8] = 'j';
     a.OceanA[0][9] = 'k';
     a.OceanA[0][10] = 'l';
-
+    
     a.OceanB[0][0] = ' ';
     a.OceanB[1][0] = '0';
     a.OceanB[2][0] = '1';
@@ -69,10 +88,8 @@ int main() {
     a.OceanB[0][8] = 'j';
     a.OceanB[0][9] = 'k';
     a.OceanB[0][10] = 'l';
-
-
-
-
+    
+    
     for(int k = 1; k < 11; k++) {
         for(int i = 1; i < 11; i++) {
             a.OceanA[k][i] = ' '; //fill Ocean
@@ -83,21 +100,6 @@ int main() {
             a.OceanB[k][i] = ' '; //fill Ocean
         }
     }
-    printf("Welcome to the game Battleship, would you like to play(y or n)? :");
-    scanf("%c", &start); //initialize start
-    if( start == 'y') {
-        printOcean(1);
-//        while(end != 1) { // loops through game until the end counter equals 1
-//            placePiece(slot);
-//            printOcean();
-//            end = check4Win(end);
-//        }
-        printf("Aw it looks likes player %d wins and player %d sucks!\n\n", a.AI, a.player);
-    } else if ( start == 'n') {
-        printf("Aww do you not enjoy the intellectually stimulating game of Battleship?\n\n");
-    }
-
-
 }
 
 void printOcean(int type) {
@@ -105,26 +107,224 @@ void printOcean(int type) {
         printf( "\n--------------------------------------------\n"); // formatiing for the Ocean
         for(int i = 0; i < 11; i++) {
             for(int j = 0; j < 11; j++) {
-                printf(" %c |", a.OceanA[i][j]); // prints Ocean
-            }
+                printf(" %c |", a.OceanA[i][j]); // prints player Ocean            }
             printf( "\n--------------------------------------------\n"); // formatiing for the Ocean
+            }
         }
     } else if( type == 2) {
         printf( "\n--------------------------------------------\n"); // formatiing for the Ocean
         for(int i = 0; i < 11; i++) {
             for(int j = 0; j < 11; j++) {
-                printf(" %c |", a.OceanB[i][j]); // prints Ocean
+                printf(" %c |", a.OceanB[i][j]); // prints AI Ocean
             }
             printf( "\n--------------------------------------------\n"); // formatiing for the Ocean
         }
     }
 }
 
-void placeShip(char *slotPtr) {
-
+void placeShip() {
+    char ship; // which ship they are placing
+    int r, c, r2, c2; // hold spots for selecting row and columan placements
+    int runB = 1, runT = 1, runD = 1, runS = 1, runC = 1; // sets while loop runner
+    int count = 0; // counts number of ships placed
+    int battleship = 0, tanker = 0, destroyer = 0, submarine = 0, cruiser = 0;
+    
+    while ( count < 5) {
+        printf("Which ship are you placing?: (4)Battleship-B, (5)Tanker-T, (2)Destroyer-D, (3)Submarine-S, (3)Cruiser-C.");
+        scanf("%c", &ship); // asks and scans which ship the user wants to place
+        if(ship == 'B' && battleship == 0) {
+            printf("What column would you like to put one end of your battleship?");
+            scanf("%d", &c); // finds desired first column
+            printf("What row would you like to put one end of your battleship?");
+            scanf("%d", &r); // finds desired first row
+            a.OceanA[r][c] = '1';
+            
+            printf("What column would you like to put the other end of your battleship?");
+            scanf("%d", &c2); // finds desired second column
+            printf("What row would you like to put the other end of your battleship?");
+            scanf("%d", &r2); // finds desired second row
+            a.OceanA[r2][c2] = '1';
+            while (runB == 1) {
+                if (r == r2) { // fills the placement of the boat in between ends
+                    if(c < c2) {
+                        a.OceanA[r][c+1] = '1';
+                        a.OceanA[r][c+2] = '1';
+                    } else if(c2 < c) {
+                        a.OceanA[r][c2+1] = '1';
+                        a.OceanA[r][c2+2] = '1';
+                    }
+                    runB = 0;
+                } else if (c == c2) {
+                    if(r < r2) {
+                        a.OceanA[r+1][c] = '1';
+                        a.OceanA[r+2][c] = '1';
+                    } else if(r2 < r) {
+                        a.OceanA[r2+1][c] = '1';
+                        a.OceanA[r2+2][c] = '1';
+                    }
+                    runB = 0;
+                } else if (!(r == r2 || c == c2)) { // ensures legal placement of boat
+                    printf("Sorry that placement is what we call cheating, please don't fuck with the programmer");
+                    runB = 1;
+                }
+            }
+            count++;
+            battleship = 1;
+        } else if( ship == 'B' && battleship == 1) {
+            printf("Seriously have you ever played this before. Only one kind of each ship can be used you shithead.");
+        } else if(ship == 'T' && tanker == 0) {
+            printf("What column would you like to put one end of your battleship?");
+            scanf("%d", &c); // finds desired first column
+            printf("What row would you like to put one end of your battleship?");
+            scanf("%d", &r); // finds desired first row
+            a.OceanA[r][c] = '1';
+            
+            printf("What column would you like to put the other end of your battleship?");
+            scanf("%d", &c2); // finds desired second column
+            printf("What row would you like to put the other end of your battleship?");
+            scanf("%d", &r2); // finds desired second row
+            a.OceanA[r2][c2] = '1';
+            while (runT == 1) {
+                if (r == r2) { // fills the placement of the boat in between ends
+                    if(c < c2) {
+                        a.OceanA[r][c+1] = '1';
+                        a.OceanA[r][c+2] = '1';
+                        a.OceanA[r][c+3] = '1';
+                    } else if(c2 < c) {
+                        a.OceanA[r][c2+1] = '1';
+                        a.OceanA[r][c2+2] = '1';
+                        a.OceanA[r][c2+3] = '1';
+                    }
+                    runT = 0;
+                } else if (c == c2) {
+                    if(r < r2) {
+                        a.OceanA[r+1][c] = '1';
+                        a.OceanA[r+2][c] = '1';
+                        a.OceanA[r+3][c] = '1';
+                    } else if(r2 < r) {
+                        a.OceanA[r2+1][c] = '1';
+                        a.OceanA[r2+2][c] = '1';
+                        a.OceanA[r2+3][c] = '1';
+                    }
+                    runT = 0;
+                } else if (!(r == r2 || c == c2)) { // ensures legal placement of boat
+                    printf("Sorry that placement is what we call cheating, please don't fuck with the programmer");
+                    runT = 1;
+                }
+            }
+            count++;
+            tanker = 1;
+        } else if( ship == 'T' && tanker == 1) {
+            printf("Seriously have you ever played this before. Only one kind of each ship can be used you shithead.");
+        }else if(ship == 'D' && destroyer == 0) {
+            printf("What column would you like to put one end of your battleship?");
+            scanf("%d", &c); // finds desired first column
+            printf("What row would you like to put one end of your battleship?");
+            scanf("%d", &r); // finds desired first row
+            a.OceanA[r][c] = '1';
+            
+            printf("What column would you like to put the other end of your battleship?");
+            scanf("%d", &c2); // finds desired second column
+            printf("What row would you like to put the other end of your battleship?");
+            scanf("%d", &r2); // finds desired second row
+            a.OceanA[r2][c2] = '1';
+            while (runD == 1) {
+                if (!(r == r2 || c == c2)) { // ensures legal placement of boat
+                    printf("Sorry that placement is what we call cheating, please don't fuck with the programmer");
+                    runD = 1;
+                } else{
+                    runD = 0;
+                }
+            }
+            count++;
+            destroyer = 1;
+        } else if( ship == 'D' && destroyer == 1) {
+            printf("Seriously have you ever played this before. Only one kind of each ship can be used you shithead.");
+        }else if(ship == 'S' && submarine == 0) {
+            printf("What column would you like to put one end of your battleship?");
+            scanf("%d", &c); // finds desired first column
+            printf("What row would you like to put one end of your battleship?");
+            scanf("%d", &r); // finds desired first row
+            a.OceanA[r][c] = '1';
+            
+            printf("What column would you like to put the other end of your battleship?");
+            scanf("%d", &c2); // finds desired second column
+            printf("What row would you like to put the other end of your battleship?");
+            scanf("%d", &r2); // finds desired second row
+            a.OceanA[r2][c2] = '1';
+            while (runS == 1) {
+                if (r == r2) { // fills the placement of the boat in between ends
+                    if(c < c2) {
+                        a.OceanA[r][c+1] = '1';
+                    } else if(c2 < c) {
+                        a.OceanA[r][c2+1] = '1';
+                    }
+                    runS = 0;
+                } else if (c == c2) {
+                    if(r < r2) {
+                        a.OceanA[r+1][c] = '1';
+                    } else if(r2 < r) {
+                        a.OceanA[r2+1][c] = '1';
+                    }
+                    runS= 0;
+                } else if (!(r == r2 || c == c2)) { // ensures legal placement of boat
+                    printf("Sorry that placement is what we call cheating, please don't fuck with the programmer");
+                    runS = 1;
+                }
+            }
+            count++;
+            submarine = 1;
+        } else if( ship == 'S' && submarine == 1) {
+            printf("Seriously have you ever played this before. Only one kind of each ship can be used you shithead.");
+        }else if(ship == 'C' && cruiser == 0) {
+            printf("What column would you like to put one end of your battleship?");
+            scanf("%d", &c); // finds desired first column
+            printf("What row would you like to put one end of your battleship?");
+            scanf("%d", &r); // finds desired first row
+            a.OceanA[r][c] = '1';
+            
+            printf("What column would you like to put the other end of your battleship?");
+            scanf("%d", &c2); // finds desired second column
+            printf("What row would you like to put the other end of your battleship?");
+            scanf("%d", &r2); // finds desired second row
+            a.OceanA[r2][c2] = '1';
+            while (runC == 1) {
+                if (r == r2) { // fills the placement of the boat in between ends
+                    if(c < c2) {
+                        a.OceanA[r][c+1] = '1';
+                    } else if(c2 < c) {
+                        a.OceanA[r][c2+1] = '1';
+                    }
+                    runC = 0;
+                } else if (c == c2) {
+                    if(r < r2) {
+                        a.OceanA[r+1][c] = '1';
+                    } else if(r2 < r) {
+                        a.OceanA[r2+1][c] = '1';
+                    }
+                    runC = 0;
+                } else if (!(r == r2 || c == c2)) { // ensures legal placement of boat
+                    printf("Sorry that placement is what we call cheating, please don't fuck with the programmer");
+                    runC = 1;
+                }
+            }
+            count++;
+            cruiser = 1;
+        }else if( ship == 'C' && cruiser == 1) {
+            printf("Seriously have you ever played this before. Only one kind of each ship can be used you shithead.");
+        }
+        
+    }
+    
+    
+    
+    
+    
+    
 }
 
 int check4Win(int end) {
-
+    
     return end;
+
 }
